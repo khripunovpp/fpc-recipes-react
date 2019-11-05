@@ -4,7 +4,7 @@ export default function(props) {
     return(
         <div>
             {props.value}
-            <input type="text" name={props.value} onChange={props.onWeightsChange}/>
+            <input type="text" name={props.value} onChange={props.onWeightChange}/>
         </div>
     )
 }

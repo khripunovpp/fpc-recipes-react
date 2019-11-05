@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
-import ingredients from './store/reducers/ingredients';
+import recipe from './store/reducers/recipe';
 import App from './App';
 
 
 const rootReducer = combineReducers({
-  ingredients
+  recipe
 })
 
 const store = createStore(rootReducer);

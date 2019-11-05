@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 import Select from 'react-select';
-import IngredientWieghts from './IngredientWieghts';
-import creatingRecipeAddIngredient from '../../store/actions/ingredients/creatingRecipeAddIngredient';
-import creatingRecipeRemoveIngredient from '../../store/actions/ingredients/creatingRecipeRemoveIngredient';
+import IngredientWeight from './IngredientWeight';
+import addRecipe from '../../store/actions/recipe/addRecipe';
 
 const options = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
+    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'vvvv', label: 'vvv' }
 ]
 
 const groupedOptions = [
@@ -24,37 +25,43 @@ class CreateRecipe extends Component {
         instruction: '',
         ingredients: []
     }
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.addRecipe(this.state);
+    }
     handleChange = (e) => {
         e.preventDefault();
         this.setState({
             [e.target.name]: e.target.value
         })
     }
-    handleWeightsChange = (e) => {
-        console.log(e.target.name, e.target.value)
+    handleWeightChange = (e) => {
+        e.preventDefault();
+        this.state.ingredients.map((ingredient)=>{
+            (ingredient.value === e.target.name) && (ingredient.weight = e.target.value)
+        })
     }
-    handleChangeIngredients = (o, event) => {
-        switch(event.action) {
+    handleChangeIngredients = (o, e) => {
+        const {action, name} = e;
+        
+        switch(action) {
             case 'select-option':
-                this.setState((state) => {
-                    return {
-                        ...state,
-                        [event.name]: [
-                            ...state[event.name],
-                            {
-                                value: event.option.value,
-                                label: event.option.label
-                            }
-                        ]
-                    }
-                })
+                const {value, label} = e.option;
+                let tState = {
+                    ...this.state
+                };
+                tState[name].every((ingredient)=>(ingredient.value !== value)) && tState[name].push({value, label});
+                this.setState(tState)
                 break;
             case 'remove-value':
+                const {value: removedValue} = e.removedValue;
                 this.setState((state) => {
-                    const tState = {
+                    let tState = {
                         ...state
-                    }
-                    delete tState[event.name][event.removedValue.value]
+                    };
+                    tState[name] = tState[name].filter((ingredient)=>{
+                        return ingredient.value !== removedValue;
+                    })
                     return tState;
                 })
                 break;
@@ -62,7 +69,6 @@ class CreateRecipe extends Component {
                 return false;
                 break;
         }
-        
     }
     render() {
         return (
@@ -74,15 +80,16 @@ class CreateRecipe extends Component {
                 <div className="form__group">
                     <label>Ingredients</label>
                     <hr/>
-                    <Select name="ingredients" options={options} isMulti onChange={this.handleChangeIngredients}/>
+                    <Select noOptionsMessage={() => <Link to="/create/ingredient" target="_blank">Добавить новый ингредиент</Link>} name="ingredients" options={groupedOptions} isMulti onChange={this.handleChangeIngredients}/>
                     {this.state.ingredients.map((data, index)=> {
-                        return <IngredientWieghts key={index} value={data.value} onWeightsChange={this.handleWeightsChange} />
+                        return <IngredientWeight key={index} value={data.value} onWeightChange={this.handleWeightChange} />
                     })}
                 </div>
                 <div className="form__group">
                     <label>Instruction</label>
                     <textarea name="instruction" onChange={this.handleChange}></textarea>
                 </div>
+                <button onClick={this.handleSubmit}>Add recipe</button>
             </div>
         )
     }
@@ -95,10 +102,8 @@ const mapStateToProps = (state) => {
   }
   
 const mapDispatchToProps = {
-    creatingRecipeAddIngredient, 
-    creatingRecipeRemoveIngredient
+    addRecipe
 }
-
 
 export default connect(
     mapStateToProps,
