@@ -11,8 +11,8 @@ export default function() {
                 <li><Link to="/create/recipe">New recipe</Link></li>
                 <li><Link to="/create/ingredient">New ingedient</Link></li>
             </ul>
-            {/* <SignInLinks/> */}
-            {/* <SignOutLinks/> */}
+            <SignInLinks/>
+            <SignOutLinks/>
         </nav>
     )
 }

@@ -1,0 +1,1 @@
+export const firebaseUrl = 'https://recipes-619a5.firebaseio.com';

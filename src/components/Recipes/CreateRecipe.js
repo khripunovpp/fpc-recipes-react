@@ -38,12 +38,12 @@ class CreateRecipe extends Component {
     handleWeightChange = (e) => {
         e.preventDefault();
         this.state.ingredients.map((ingredient)=>{
-            (ingredient.value === e.target.name) && (ingredient.weight = e.target.value)
+            return (ingredient.value === e.target.name) && (ingredient.weight = e.target.value)
         })
     }
     handleChangeIngredients = (o, e) => {
         const {action, name} = e;
-        
+
         switch(action) {
             case 'select-option':
                 const {value, label} = e.option;
@@ -67,7 +67,6 @@ class CreateRecipe extends Component {
                 break;
             default:
                 return false;
-                break;
         }
     }
     render() {
@@ -95,17 +94,11 @@ class CreateRecipe extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-      ingredients: state
-    }
-  }
-  
 const mapDispatchToProps = {
     addRecipe
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(CreateRecipe)
