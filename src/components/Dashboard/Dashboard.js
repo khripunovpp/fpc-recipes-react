@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
+import RecipesContainer from '../Recipes/RecipesContainer';
 
 class Dashboard extends Component {
     componentDidMount = () => {
@@ -12,9 +13,7 @@ class Dashboard extends Component {
             <Fragment>
                 {loading 
                     ? <p>Loading...</p>
-                    : recipes.map((recipe)=>(
-                        <div key={recipe.id}>{recipe.title}</div>
-                    ))}
+                    : <RecipesContainer recipes={recipes}></RecipesContainer>}
             </Fragment>
         )
     }

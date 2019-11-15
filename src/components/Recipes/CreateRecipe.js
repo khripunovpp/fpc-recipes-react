@@ -21,23 +21,31 @@ const groupedOptions = [
 
 class CreateRecipe extends Component {
     state = {
-        title: '',
-        instruction: '',
-        ingredients: []
+        recipe: {
+            title: '',
+            instruction: '',
+            ingredients: []
+        },
+        hasNotify: false,
+        recipeId: ''
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.addRecipe(this.state);
+        this.props.addRecipe(this.state.recipe).then(this.showNotify);
     }
     handleChange = (e) => {
         e.preventDefault();
         this.setState({
-            [e.target.name]: e.target.value
+            ...this.state,
+            recipe: {
+                ...this.state.recipe,
+                [e.target.name]: e.target.value
+            }
         })
     }
     handleWeightChange = (e) => {
         e.preventDefault();
-        this.state.ingredients.map((ingredient)=>{
+        this.state.recipe.ingredients.map((ingredient)=>{
             return (ingredient.value === e.target.name) && (ingredient.weight = e.target.value)
         })
     }
@@ -50,7 +58,7 @@ class CreateRecipe extends Component {
                 let tState = {
                     ...this.state
                 };
-                tState[name].every((ingredient)=>(ingredient.value !== value)) && tState[name].push({value, label});
+                tState.recipe[name].every((ingredient)=>(ingredient.value !== value)) && tState.recipe[name].push({value, label});
                 this.setState(tState)
                 break;
             case 'remove-value':
@@ -59,7 +67,7 @@ class CreateRecipe extends Component {
                     let tState = {
                         ...state
                     };
-                    tState[name] = tState[name].filter((ingredient)=>{
+                    tState.recipe[name] = tState.recipe[name].filter((ingredient)=>{
                         return ingredient.value !== removedValue;
                     })
                     return tState;
@@ -69,6 +77,12 @@ class CreateRecipe extends Component {
                 return false;
         }
     }
+    showNotify = (recipe) => {
+        this.setState({
+            recipeId: recipe.recipeId,
+            hasNotify: true
+        }, function(e){console.log(this.state)})
+    }
     render() {
         return (
             <div className="form">
@@ -76,11 +90,12 @@ class CreateRecipe extends Component {
                     <label>Title</label>
                     <input type="text" name="title" onChange={this.handleChange}/>
                 </div>
+                {this.state.hasNotify && <Link to={`/recipes/${this.state.recipeId}`}>Show your recipe</Link>}
                 <div className="form__group">
                     <label>Ingredients</label>
                     <hr/>
                     <Select noOptionsMessage={() => <Link to="/create/ingredient" target="_blank">Добавить новый ингредиент</Link>} name="ingredients" options={groupedOptions} isMulti onChange={this.handleChangeIngredients}/>
-                    {this.state.ingredients.map((data, index)=> {
+                    {this.state.recipe.ingredients.map((data, index)=> {
                         return <IngredientWeight key={index} value={data.value} onWeightChange={this.handleWeightChange} />
                     })}
                 </div>
@@ -94,11 +109,15 @@ class CreateRecipe extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    recipes: state.recipes
+})
+
 const mapDispatchToProps = {
     addRecipe
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(CreateRecipe)

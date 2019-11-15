@@ -13,6 +13,10 @@ export default function recipes(state = initialState, action) {
         }
       ))
       return {loading: false, recipes};
+    case 'FETCH_RECIPES_EMPTY':
+        return {loading: false, recipes: [...state.recipes]};
+    case 'FETCH_SINGLE_RECIPE':
+        return state
     default:
       return state
   }

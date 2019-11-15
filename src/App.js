@@ -3,6 +3,7 @@ import NavBar from './components/NavBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import CreateRecipe from './components/Recipes/CreateRecipe';
 import CreateIngredient from './components/Ingredients/CreateIngredient';
+import RecipePage from './components/Recipes/RecipePage';
 import {
   BrowserRouter as Router,
   Switch,
@@ -19,6 +20,7 @@ class App extends Component {
             <Route path="/" exact component={Dashboard}/>
             <Route path="/create/recipe" component={CreateRecipe}/>
             <Route path="/create/ingredient" component={CreateIngredient}/>
+            <Route path="/recipes/:uid" component={RecipePage}/>
           </Switch>
         </Router>
       </div>
