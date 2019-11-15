@@ -1,0 +1,14 @@
+.main {
+    padding: 30px 0;
+}
+
+.recipe__card + .recipe__card {
+    margin-top: 15px;
+}
+
+.ingredientsList {
+    padding: 10px;
+    background-color: #f5f5f5;
+    margin-top: 10px;
+    border-radius: 5px;
+}

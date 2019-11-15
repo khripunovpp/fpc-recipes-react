@@ -6,6 +6,8 @@ import ReduxThunk from 'redux-thunk';
 import recipes from './store/reducers/recipes';
 import App from './App';
 
+import "./styles.css";
+import "../node_modules/bootstrap/dist/css/bootstrap.css";
 
 const rootReducer = combineReducers({
   recipes

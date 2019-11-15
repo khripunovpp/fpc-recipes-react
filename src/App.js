@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NavBar from './components/NavBar';
+import NavBar from './components/Navbar/NavBar';
 import Dashboard from './components/Dashboard/Dashboard';
 import CreateRecipe from './components/Recipes/CreateRecipe';
 import CreateIngredient from './components/Ingredients/CreateIngredient';
@@ -9,6 +9,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+
 
 class App extends Component {
   render() {

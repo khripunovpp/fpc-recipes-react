@@ -9,6 +9,7 @@ export default function(uid) {
             if (recipe.uid === uid) {
                return cahsedRecipe = recipe;
             }
+            return false
         })
 
         if(cashed) {
