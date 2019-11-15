@@ -6,8 +6,8 @@ export default function(props) {
     return (
         recipes.length 
             ? recipes.map((recipe)=>(
-                <Fragment key={recipe.id}>
-                    <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
+                <Fragment key={recipe.uid}>
+                    <Link to={`/recipes/${recipe.uid}`}>{recipe.title}</Link>
                     <br />
                 </Fragment>
             ))

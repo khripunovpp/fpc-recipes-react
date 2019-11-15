@@ -27,7 +27,7 @@ class CreateRecipe extends Component {
             ingredients: []
         },
         hasNotify: false,
-        recipeId: ''
+        uid: ''
     }
     handleSubmit = (e) => {
         e.preventDefault();
@@ -79,7 +79,7 @@ class CreateRecipe extends Component {
     }
     showNotify = (recipe) => {
         this.setState({
-            recipeId: recipe.recipeId,
+            uid: recipe.uid,
             hasNotify: true
         }, function(e){console.log(this.state)})
     }
@@ -90,7 +90,7 @@ class CreateRecipe extends Component {
                     <label>Title</label>
                     <input type="text" name="title" onChange={this.handleChange}/>
                 </div>
-                {this.state.hasNotify && <Link to={`/recipes/${this.state.recipeId}`}>Show your recipe</Link>}
+                {this.state.hasNotify && <Link to={`/recipes/${this.state.uid}`}>Show your recipe</Link>}
                 <div className="form__group">
                     <label>Ingredients</label>
                     <hr/>

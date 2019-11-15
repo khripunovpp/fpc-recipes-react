@@ -6,17 +6,20 @@ const initialState = {
 export default function recipes(state = initialState, action) {
   switch (action.type) {
     case 'FETCH_RECIPES':
-      const recipes = Object.keys(action.recipes).map((id)=>(
+      const recipes = Object.keys(action.recipes).map((uid)=>(
         {
-          id,
-          ...action.recipes[id]
+          uid,
+          ...action.recipes[uid]
         }
       ))
       return {loading: false, recipes};
     case 'FETCH_RECIPES_EMPTY':
         return {loading: false, recipes: [...state.recipes]};
     case 'FETCH_SINGLE_RECIPE':
-        return state
+        let tmpState = {loading: false, recipes: [...state.recipes]};
+        const hasInState = tmpState.recipes.some((recipe)=> recipe.uid === action.recipe.uid);
+        !hasInState && tmpState.recipes.push(action.recipe)
+        return tmpState;
     default:
       return state
   }
