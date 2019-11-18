@@ -18,8 +18,9 @@ export default function(uid) {
         }
        
         return axios.get(`${firebaseUrl}/recipes/${uid}.json`).then(({data})=>{
-            data && dispatch({ type: "FETCH_SINGLE_RECIPE", recipe: {...data, uid}})
-            return data
+            let payload = {...data};
+            data && (payload = {...payload, uid}, dispatch({ type: "FETCH_SINGLE_RECIPE", recipe: payload}))
+            return payload
         })
     }
 }

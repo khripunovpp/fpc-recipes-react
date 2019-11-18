@@ -22,7 +22,6 @@ class RecipePage extends Component {
         this.props.fetch(uid).then((recipe)=>{
             this.setState({
                 ...recipe,
-                uid,
                 loading: false
             })
         })

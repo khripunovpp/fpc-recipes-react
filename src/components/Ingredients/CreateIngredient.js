@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Redirect} from "react-router-dom";
+import { Link, Redirect} from "react-router-dom";
 import addIngredient from "../../store/actions/recipe/addIngredient";
 
 class CreateIngredient extends Component {
@@ -36,7 +36,7 @@ class CreateIngredient extends Component {
         return (
             <div className="main">
                 <div className="container">
-                    <h1 className="main__title">Add new ingredient</h1>
+                    <h1 className="main__title">Add new ingredient <small>or show <Link to="/ingredients">list</Link></small></h1>
                     <div className="row">
                         <div className="col-md-12">
                             <div className="form">
