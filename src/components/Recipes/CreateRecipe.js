@@ -1,23 +1,13 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect} from "react-router-dom";
-import Select from 'react-select';
+import Select from 'react-select/async';
+import makeAnimated from 'react-select/animated';
 import IngredientWeight from './IngredientWeight';
 import addRecipe from '../../store/actions/recipe/addRecipe';
+import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
 
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'vvvv', label: 'vvv' }
-]
-
-const groupedOptions = [
-    {
-        label: 'Flavours',
-        options: options,
-    }
-];
+const animatedComponents = makeAnimated();
 
 class CreateRecipe extends Component {
     initialState = {
@@ -79,11 +69,18 @@ class CreateRecipe extends Component {
                 return false;
         }
     }
+    handleLoadIngredients =  inputValue => {
+        new Promise(resolve => {
+            this.props.fetchIngredients.then((ingredients)=>{
+                resolve(ingredients);
+            })
+        });
+    }
     showNotify = (recipe) => {
         this.setState({
             uid: recipe.uid,
             hasNotify: true
-        }, () => {console.log(this.state)})
+        })
     }
     render() {
         const ingredients = this.state.recipe.ingredients;
@@ -104,7 +101,16 @@ class CreateRecipe extends Component {
                                 </div>
                                 <div className="form-group form__group">
                                     <label>Ingredients</label>
-                                    <Select noOptionsMessage={() => <Link to="/create/ingredient" target="_blank">Добавить новый ингредиент</Link>} name="ingredients" options={groupedOptions} isMulti onChange={this.handleChangeIngredients}/>
+                                    <Select 
+                                        components={animatedComponents} 
+                                        noOptionsMessage={() => <Link to="/create/ingredient" target="_blank">Добавить новый ингредиент</Link>} 
+                                        name="ingredients" 
+                                        isMulti 
+                                        placeholder="Start typing"
+                                        cacheOptions
+                                        defaultValue={[...this.state.recipe.ingredients]} 
+                                        onChange={this.handleChangeIngredients}
+                                        loadOptions={this.handleLoadIngredients}/>
                                     {ingredients && ingredients.map((data, index)=> {
                                         return <IngredientWeight key={index} value={data.value} onWeightChange={this.handleWeightChange} />
                                     })}
@@ -129,7 +135,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    addRecipe
+    addRecipe,
+    fetchIngredients
 }
 
 export default connect(
