@@ -9,18 +9,21 @@ export default function(uid) {
             if (recipe.uid === uid) {
                return cahsedRecipe = recipe;
             }
-            return false
+            return false;
         })
 
         if(cashed) {
-            await dispatch({ type: "FETCH_SINGLE_RECIPE", recipe: cahsedRecipe})
-            return cahsedRecipe
+            await dispatch({ type: "FETCH_SINGLE_RECIPE", recipe: cahsedRecipe});
+            return cahsedRecipe;
         }
        
         return axios.get(`${firebaseUrl}/recipes/${uid}.json`).then(({data})=>{
             let payload = {...data};
-            data && (payload = {...payload, uid}, dispatch({ type: "FETCH_SINGLE_RECIPE", recipe: payload}))
-            return payload
+            if(data) {
+                payload = {...payload, uid};
+                dispatch({ type: "FETCH_SINGLE_RECIPE", recipe: payload});
+            };
+            return payload;
         })
     }
 }

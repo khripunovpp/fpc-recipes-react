@@ -2,27 +2,25 @@ import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import fetchSingleIngredient from '../../store/actions/recipe/fetchSingleIngredient';
 import Alert from "../layout/Alert";
-
 import Spinner from '../layout/Spinner';
-
 
 function Page({data}) {
     return (
         data.uid
-            ? <Fragment>
-                <div className="jumbotron jumbotron-fluid">
-                    <div className="container">
-                        <h1 className="display-4">{data.name}</h1>
-                        <p className="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+            ?   <Fragment>
+                    <div className="jumbotron jumbotron-fluid">
+                        <div className="container">
+                            <h1 className="display-4">{data.name}</h1>
+                            <p className="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+                        </div>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        
+                    <div className="row">
+                        <div className="col-md-12">
+                            
+                        </div>
                     </div>
-                </div>
-            </Fragment>
-            : <Alert>Ingredient not found!</Alert>
+                </Fragment>
+            :   <Alert>Ingredient not found!</Alert>
     )
 }
 

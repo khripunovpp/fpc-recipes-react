@@ -9,17 +9,20 @@ export default function(uid) {
             if (ingredient.uid === uid) {
                return cahsedIngredient = ingredient;
             }
-            return false
+            return false;
         })
 
         if(cashed) {
-            await dispatch({ type: "FETCH_SINGLE_INGREDIENT", ingredient: cahsedIngredient})
-            return cahsedIngredient
+            await dispatch({ type: "FETCH_SINGLE_INGREDIENT", ingredient: cahsedIngredient});
+            return cahsedIngredient;
         }
        
         return axios.get(`${firebaseUrl}/ingredients/${uid}.json`).then(({data})=>{
             let payload = {...data};
-            data && (payload = {...payload, uid}, dispatch({ type: "FETCH_SINGLE_INGREDIENT", ingredient: payload}))
+            if(data) {
+                payload = {...payload, uid};
+                dispatch({ type: "FETCH_SINGLE_INGREDIENT", ingredient: payload})
+            };
             return payload
         })
     }

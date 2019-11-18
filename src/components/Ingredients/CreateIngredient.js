@@ -36,7 +36,7 @@ class CreateIngredient extends Component {
         return (
             <div className="main">
                 <div className="container">
-                    <h1 className="main__title">Add new ingredient <small>or show <Link to="/ingredients">list</Link></small></h1>
+                    <h1 className="main__title">Add new ingredient <small>or see <Link to="/ingredients">full list</Link></small></h1>
                     <div className="row">
                         <div className="col-md-12">
                             <div className="form">
