@@ -13,6 +13,8 @@ const initialState = {
                 }
             ))
             return {loading: false, ingredients};
+        case 'FETCH_INGREDIENTS_EMPTY':
+            return {loading: false, ingredients: [...state.ingredients]};
         default:
             return state
     }

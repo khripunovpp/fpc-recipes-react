@@ -29,11 +29,11 @@ class Dashboard extends Component {
                                 <div className="list-group">
                                     <Link to="/recipes" className="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
                                         All recipes
-                                        <span className="badge badge-primary badge-pill">{recipesObj.recipes.length}</span>
+                                        <span className="badge badge-dark badge-pill">{recipesObj.recipes.length}</span>
                                     </Link>
                                     <Link to="/ingredients" className="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
                                         Ingredients base
-                                        <span className="badge badge-primary badge-pill">{ingredientsObj.ingredients.length}</span>
+                                        <span className="badge badge-dark badge-pill">{ingredientsObj.ingredients.length}</span>
                                     </Link>
                                 </div>
                             </Sidebar>

@@ -6,7 +6,7 @@ export default function(props) {
     const { recipes } = props;
     return (
         recipes.length
-            ? recipes.map(( recipe ) => <RecipeCard recipe={recipe} key={recipe.uid}/> )
+            ? recipes.map(( recipe ) => <RecipeCard recipe={recipe} key={recipe.uid}/>)
             : <Alert>Recipes Not Found</Alert>
     )
 }

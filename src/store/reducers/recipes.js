@@ -20,6 +20,8 @@ export default function recipes(state = initialState, action) {
         const hasInState = tmpState.recipes.some((recipe)=> recipe.uid === action.recipe.uid);
         !hasInState && tmpState.recipes.push(action.recipe)
         return tmpState;
+    case 'ADD_RECIPE_ERROR':
+        return {loading: false, error: [...action.error]};
     default:
       return state
   }

@@ -59,9 +59,9 @@ const mapStateToProps = (state) => ({
     
 })
 
-const mapDispatchToProps = {
+const mapDispatchToProps = ({
     addIngredient
-}
+})
 
 export default connect(
     mapStateToProps,

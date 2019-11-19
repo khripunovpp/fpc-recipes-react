@@ -22,8 +22,8 @@ class IngredientsListPage extends Component {
             </div>
         )
     }
-    componentDidMount = () => {
-       this.props.fetchIngredients()
+    componentDidMount = (e) => {
+       this.props.fetchIngredients();
     }
 }
 
