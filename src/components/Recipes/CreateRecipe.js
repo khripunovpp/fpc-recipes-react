@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect} from "react-router-dom";
 import Select from 'react-select/async';
+import { Helmet } from "react-helmet";
 import makeAnimated from 'react-select/animated';
 import IngredientWeight from './IngredientWeight';
 import addRecipe from '../../store/actions/recipe/addRecipe';
@@ -88,6 +89,9 @@ class CreateRecipe extends Component {
             <div className="main">
                 <div className="container">
                     <h1 className="main__title">Add new recipe</h1>
+                    <Helmet>
+                        <title>Add new recipe</title>
+                    </Helmet>
                     <div className="row">
                         <div className="col-md-12">
                             <div className="form">

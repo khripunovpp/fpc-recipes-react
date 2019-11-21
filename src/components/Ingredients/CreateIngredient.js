@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect} from "react-router-dom";
+import { Helmet } from "react-helmet";
 import addIngredient from "../../store/actions/recipe/addIngredient";
 
 class CreateIngredient extends Component {
@@ -35,6 +36,9 @@ class CreateIngredient extends Component {
     render() {
         return (
             <div className="main">
+                <Helmet>
+                    <title>Add new ingredient</title>
+                </Helmet>
                 <div className="container">
                     <h1 className="main__title">Add new ingredient <small>or see <Link to="/ingredients">full list</Link></small></h1>
                     <div className="row">

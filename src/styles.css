@@ -2,7 +2,7 @@
     padding: 30px 0;
 }
 
-.recipe__card + .recipe__card {
+.recipes__card + .recipes__card {
     margin-top: 15px;
 }
 
@@ -13,26 +13,26 @@
     border-radius: 5px;
 }
 
-.recipe__card {
+.recipes__card {
     overflow: hidden;
     color: inherit;
 }
 
-.recipe__card:hover {
+.recipes__card:hover {
     text-decoration: none;
     color: inherit;
 }
 
-.recipe__card .card-body {
+.recipes__card .card-body {
     background-color: #fff;
     position: relative;
     z-index: 1;
 }
 
-.recipe__card .card-img-top {
+.recipes__card .card-img-top {
     transition: all .2s ease-in-out;
 }
 
-.recipe__card:hover .card-img-top {
+.recipes__card:hover .card-img-top {
     transform: scale(1.1);
 }

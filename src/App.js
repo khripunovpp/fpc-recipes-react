@@ -7,6 +7,7 @@ import RecipePage from './components/Recipes/RecipePage';
 import RecipesListPage from './components/Recipes/RecipesListPage';
 import IngredientsListPage from './components/Ingredients/IngredientsListPage';
 import IngredientPage from './components/Ingredients/IngredientPage';
+import { Helmet } from "react-helmet";
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,10 +19,17 @@ class App extends Component {
   render() {
     return (
       <div className="app">
+        <Helmet titleTemplate="%s | MyFood.Com">
+          <title></title>
+        </Helmet>
         <Router>
           <NavBar />
           <Switch>
-            <Route path="/" exact component={Dashboard}/>
+            <Route path="/" exact
+              render={routeProps => (
+                <Dashboard />
+              )}
+            />
             <Route path="/create/recipe" component={CreateRecipe}/>
             <Route path="/create/ingredient" component={CreateIngredient}/>
             <Route path="/recipes" exact component={RecipesListPage}/>

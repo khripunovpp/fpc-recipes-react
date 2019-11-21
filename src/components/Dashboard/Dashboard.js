@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
+import {Helmet} from "react-helmet";
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
 import RecipesContainer from '../Recipes/RecipesListContainer';
@@ -15,6 +16,9 @@ class Dashboard extends Component {
         const {recipesData, ingredientsData} = this.props.state;
         return (
             <div className="main">
+                <Helmet>
+                    <title>Dashboard</title>
+                </Helmet>
                 <div className="container">
                     <h1 className="main__title">Recipes</h1>
                     <div className="row">

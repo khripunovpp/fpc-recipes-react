@@ -3,11 +3,15 @@ import { connect } from 'react-redux';
 import fetchSingleIngredient from '../../store/actions/recipe/fetchSingleIngredient';
 import Alert from "../layout/Alert";
 import Spinner from '../layout/Spinner';
+import { Helmet } from "react-helmet";
 
 function Page({data}) {
   return (
 		data.uid
 			? <div className="card mb-3">
+                    <Helmet>
+                        <title>{data.name}</title>
+                    </Helmet>
 					<div className="row no-gutters">
 						<div className="col-md-4">
 							<img src={data.thumbnail} className="card-img" alt={data.name}></img>

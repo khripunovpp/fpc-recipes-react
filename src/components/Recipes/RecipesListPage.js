@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 import RecipesContainer from './RecipesListContainer';
+import { Helmet } from "react-helmet";
 
 class RecipesListPage extends Component {
     render = () => {
@@ -9,6 +10,9 @@ class RecipesListPage extends Component {
             <div className="main">
                 <div className="container">
                     <h1 className="main__title">Recipes</h1>
+                    <Helmet>
+                        <title>Recipes</title>
+                    </Helmet>
                     <div className="row">
                         <div className="main__recipes recipes col-md-12">
                             <RecipesContainer recipesData={this.props.recipes}></RecipesContainer>

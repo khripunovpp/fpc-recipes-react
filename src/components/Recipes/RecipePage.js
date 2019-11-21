@@ -1,19 +1,26 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import fetchSingleRecipe from '../../store/actions/recipe/fetchSingleRecipe';
 import Alert from "../layout/Alert";
 import Spinner from '../layout/Spinner';
+import { Helmet } from "react-helmet";
 
-function Page({data}) {
+function Page({recipe}) {
   return (
-		data.uid
-			? <div className="jumbotron jumbotron-fluid">
-					<div className="container">
-						<h1 className="display-4">{data.title}</h1>
-						{data.description && <p className="lead">{data.description}</p>}
-					</div>
-				</div>
-			: <Alert>Ingredient not found!</Alert>
+        recipe.uid
+			?   <Fragment>
+                    {recipe.thumbnail && <img src={recipe.thumbnail} className="card-img-top" alt={recipe.title} />}
+                    <Helmet>
+                        <title>{recipe.title}</title>
+                    </Helmet>
+                    <div className="jumbotron jumbotron-fluid">
+                        <div className="container">
+                            <h1 className="display-4">{recipe.title}</h1>
+                            {recipe.description && <p className="lead">{recipe.description}</p>}
+                        </div>
+                    </div>
+                </Fragment>
+			:   <Alert>Ingredient not found!</Alert>
   )
 }
 
@@ -28,7 +35,7 @@ class RecipePage extends Component {
                     {
                     loading
                         ? <Spinner />
-                        : <Page data={this.state}/>
+                        : <Page recipe={this.state}/>
                     }
                 </div>
             </div>
