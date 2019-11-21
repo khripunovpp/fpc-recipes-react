@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
-import IngredientsListContainer from './IngredientsListContainer';
+import IngredientsContainer from './IngredientsContainer';
 import Spinner from '../layout/Spinner';
 import { Helmet } from "react-helmet";
 
@@ -17,9 +17,7 @@ class IngredientsListPage extends Component {
                     </Helmet>
                     <div className="row">
                         <div className="main__recipes recipe col-md-12">
-                            {ingredients.loading 
-                                ? <Spinner />
-                                : <IngredientsListContainer ingredients={ingredients.ingredients}></IngredientsListContainer>}
+                            <IngredientsContainer ingredients={ingredients}></IngredientsContainer>
                         </div>
                     </div>
                 </div>

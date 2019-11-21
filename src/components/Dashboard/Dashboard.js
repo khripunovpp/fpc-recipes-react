@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
 import RecipesContainer from '../Recipes/RecipesListContainer';
