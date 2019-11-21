@@ -12,3 +12,27 @@
     margin-top: 10px;
     border-radius: 5px;
 }
+
+.recipe__card {
+    overflow: hidden;
+    color: inherit;
+}
+
+.recipe__card:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.recipe__card .card-body {
+    background-color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.recipe__card .card-img-top {
+    transition: all .2s ease-in-out;
+}
+
+.recipe__card:hover .card-img-top {
+    transform: scale(1.1);
+}

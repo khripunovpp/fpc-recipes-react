@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
-import RecipesContainer from './RecipesContainer';
-import Spinner from '../layout/Spinner';
+import RecipesContainer from '../Recipes/RecipesListContainer';
 import Sidebar from '../layout/Sidebar';
 
 class Dashboard extends Component {
@@ -13,27 +12,25 @@ class Dashboard extends Component {
         this.props.fetchIngredients();
     }
     render = () => {
-        const {recipes: recipesObj, ingredients: ingredientsObj} = this.props.state;
+        const {recipesData, ingredientsData} = this.props.state;
         return (
             <div className="main">
                 <div className="container">
                     <h1 className="main__title">Recipes</h1>
                     <div className="row">
-                        <div className="main__recipes recipe col-md-8">
-                            {recipesObj.loading 
-                                ? <Spinner />
-                                : <RecipesContainer recipes={recipesObj.recipes}></RecipesContainer>}
+                        <div className="main__recipes recipes col-md-8">
+                            <RecipesContainer recipesData={recipesData}></RecipesContainer>
                         </div>
                         <div className="col-md-4">
                             <Sidebar>
                                 <div className="list-group">
                                     <Link to="/recipes" className="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
                                         All recipes
-                                        <span className="badge badge-dark badge-pill">{recipesObj.recipes.length}</span>
+                                        <span className="badge badge-dark badge-pill">{recipesData.recipes.length}</span>
                                     </Link>
                                     <Link to="/ingredients" className="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
                                         Ingredients base
-                                        <span className="badge badge-dark badge-pill">{ingredientsObj.ingredients.length}</span>
+                                        <span className="badge badge-dark badge-pill">{ingredientsData.ingredients.length}</span>
                                     </Link>
                                 </div>
                             </Sidebar>
@@ -51,7 +48,10 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state) => ({
-    state: {...state}
+    state: {
+        recipesData: {...state.recipes},
+        ingredientsData: {...state.ingredients}
+    }
 })
 
 export default connect(

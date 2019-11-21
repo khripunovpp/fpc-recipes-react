@@ -1,31 +1,31 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import fetchSingleIngredient from '../../store/actions/recipe/fetchSingleIngredient';
 import Alert from "../layout/Alert";
 import Spinner from '../layout/Spinner';
 
 function Page({data}) {
-    return (
-        data.uid
-            ?   <Fragment>
-                    <div className="jumbotron jumbotron-fluid">
-                        <div className="container">
-                            <h1 className="display-4">{data.name}</h1>
-                            <p className="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            
-                        </div>
-                    </div>
-                </Fragment>
-            :   <Alert>Ingredient not found!</Alert>
-    )
+  return (
+		data.uid
+			? <div className="card mb-3">
+					<div className="row no-gutters">
+						<div className="col-md-4">
+							<img src={data.thumbnail} className="card-img" alt={data.name}></img>
+						</div>
+						<div className="col-md-8">
+							<div className="card-body">
+								<h5 className="card-title">{data.name}</h5>
+								{data.description && <p className="card-text">{data.description}</p>}
+							</div>
+						</div>
+					</div>
+				</div>
+			: <Alert>Ingredient not found!</Alert>
+  )
 }
 
 
-class RecipePage extends Component {
+class IngredientPage extends Component {
     state = {loading: true, uid: ''}
     render() {
         const {loading} = this.state;
@@ -63,4 +63,4 @@ const mapDispatchToProps = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(RecipePage)
+)(IngredientPage)
