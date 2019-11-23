@@ -1,25 +1,27 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import fetchSingleIngredient from '../../store/actions/recipe/fetchSingleIngredient';
+import fetchSingleIngredient from '../../store/actions/ingredients/fetchSingleIngredient';
 import Alert from "../layout/Alert";
 import Spinner from '../layout/Spinner';
 import { Helmet } from "react-helmet";
 
-function Page({data}) {
+function Page({ingredient}) {
   return (
-		data.uid
+        ingredient.uid
 			? <div className="card mb-3">
                     <Helmet>
-                        <title>{data.name}</title>
+                        <title>{ingredient.name}</title>
                     </Helmet>
 					<div className="row no-gutters">
-						<div className="col-md-4">
-							<img src={data.thumbnail} className="card-img" alt={data.name}></img>
-						</div>
-						<div className="col-md-8">
+                        {ingredient.thumbnail &&
+                            <div className="col-md-4">
+                                <img src={ingredient.thumbnail} className="card-img" alt={ingredient.name}></img>
+                            </div>
+                        }
+						<div className={`col-md-${ingredient.thumbnail ? '8': '12'}`}>
 							<div className="card-body">
-								<h5 className="card-title">{data.name}</h5>
-								{data.description && <p className="card-text">{data.description}</p>}
+								<h5 className="card-title">{ingredient.name}</h5>
+								{ingredient.description && <p className="card-text">{ingredient.description}</p>}
 							</div>
 						</div>
 					</div>
@@ -39,7 +41,7 @@ class IngredientPage extends Component {
                     {
                     loading
                         ? <Spinner />
-                        : <Page data={this.state}/>
+                        : <Page ingredient={this.state}/>
                     }
                 </div>
             </div>

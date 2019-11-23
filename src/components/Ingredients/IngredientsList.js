@@ -6,7 +6,7 @@ export default function(props) {
     const { ingredients } = props;
     return (
         ingredients.length
-            ? <IngredientsTable data={ingredients} />
+            ? <IngredientsTable ingredients={ingredients} />
             : <Alert>ingredients Not Found</Alert>
     )
 }

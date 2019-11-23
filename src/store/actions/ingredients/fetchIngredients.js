@@ -7,6 +7,7 @@ export default function() {
             ingredients
                 ? dispatch({ type: "FETCH_INGREDIENTS", ingredients})
                 : dispatch({ type: "FETCH_INGREDIENTS_EMPTY"})
+            return ingredients
         })
     }
 }

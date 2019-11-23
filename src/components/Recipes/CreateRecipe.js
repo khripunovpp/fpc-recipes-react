@@ -1,14 +1,24 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect} from "react-router-dom";
-import Select from 'react-select/async';
+import { Redirect } from "react-router-dom";
+import Select from 'react-select';
 import { Helmet } from "react-helmet";
 import makeAnimated from 'react-select/animated';
 import IngredientWeight from './IngredientWeight';
 import addRecipe from '../../store/actions/recipe/addRecipe';
-import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
+import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
+import addIngredient from "../../store/actions/ingredients/addIngredient";
+
 
 const animatedComponents = makeAnimated();
+
+const options = [
+    {value: 'fbfradfnzgfmzgn', label: 'Banana'},
+    {value: 'erb6hi6umnv7n5y', label: 'Yogurt'},
+    {value: 'ewfnd4y3hn45u4h', label: 'Cucumber'},
+    {value: 'mfgn76jwn45hn7t', label: 'Milk'},
+    {value: 'gtjetyns463grvy', label: 'Flour'},
+];
 
 class CreateRecipe extends Component {
     initialState = {
@@ -18,6 +28,8 @@ class CreateRecipe extends Component {
             description: '',
             ingredients: []
         },
+        ingredientInputValue: '',
+        loadedIngredients: [],
         hasNotify: false,
         uid: ''
     }
@@ -47,12 +59,7 @@ class CreateRecipe extends Component {
 
         switch(action) {
             case 'select-option':
-                const {value, label} = e.option;
-                let tState = {
-                    ...this.state
-                };
-                tState.recipe[name].every((ingredient)=>(ingredient.value !== value)) && tState.recipe[name].push({value, label});
-                this.setState(tState)
+                this.setState({...this.state.recipe.ingredients.push({...e.option})})
                 break;
             case 'remove-value':
                 const {value: removedValue} = e.removedValue;
@@ -70,13 +77,12 @@ class CreateRecipe extends Component {
                 return false;
         }
     }
-    handleLoadIngredients =  inputValue => {
-        new Promise(resolve => {
-            this.props.fetchIngredients.then((ingredients)=>{
-                resolve(ingredients);
-            })
+    handleCreateOption = (newIngredient) => {
+        this.props.addIngredient({name: newIngredient}).then((ingredient) => {
+            this.setState({...this.state.recipe.ingredients.push({value: ingredient.uid, label: newIngredient})})
         });
     }
+    handleIngredientTyping = (newValue) => this.setState({ ingredientInputValue: newValue })
     showNotify = (recipe) => {
         this.setState({
             uid: recipe.uid,
@@ -85,6 +91,7 @@ class CreateRecipe extends Component {
     }
     render() {
         const ingredients = this.state.recipe.ingredients;
+        console.log(this.state);
         return (
             <div className="main">
                 <div className="container">
@@ -107,16 +114,14 @@ class CreateRecipe extends Component {
                                     <label>Ingredients</label>
                                     <Select 
                                         components={animatedComponents} 
-                                        noOptionsMessage={() => <Link to="/create/ingredient" target="_blank">Добавить новый ингредиент</Link>} 
                                         name="ingredients" 
                                         isMulti 
-                                        placeholder="Start typing"
-                                        cacheOptions
-                                        defaultValue={[...this.state.recipe.ingredients]} 
-                                        onChange={this.handleChangeIngredients}
-                                        loadOptions={this.handleLoadIngredients}/>
-                                    {ingredients && ingredients.map((data, index)=> {
-                                        return <IngredientWeight key={index} value={data.value} onWeightChange={this.handleWeightChange} />
+                                        options={this.state.loadedIngredients}
+                                        cacheOptions 
+                                        onInputChange={this.handleIngredientTyping}
+                                        onChange={this.handleChangeIngredients}/>
+                                    {ingredients && ingredients.map((data, i)=> {
+                                        return <IngredientWeight key={data.value} data={data} onWeightChange={this.handleWeightChange}>{i+1}</IngredientWeight>
                                     })}
                                 </div>
                                 <div className="form-group form__group">
@@ -132,6 +137,16 @@ class CreateRecipe extends Component {
             </div>
         )
     }
+    componentDidMount = () => {
+        this.props.fetchIngredients().then((fetchedIngredients) => {
+            this.setState({loadedIngredients: Object.keys(fetchedIngredients).map((uid)=>(
+                {
+                value: uid,
+                label: fetchedIngredients[uid].name
+                }
+            ))})
+        })
+    }
 }
 
 const mapStateToProps = (state) => ({
@@ -140,7 +155,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     addRecipe,
-    fetchIngredients
+    fetchIngredients,
+    addIngredient
 }
 
 export default connect(

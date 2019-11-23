@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import fetchIngredients from '../../store/actions/recipe/fetchIngredients';
+import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
 import IngredientsContainer from './IngredientsContainer';
-import Spinner from '../layout/Spinner';
 import { Helmet } from "react-helmet";
 
 class IngredientsListPage extends Component {
