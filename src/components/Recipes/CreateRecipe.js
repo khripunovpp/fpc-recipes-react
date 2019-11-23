@@ -78,8 +78,8 @@ class CreateRecipe extends Component {
         }
     }
     handleCreateOption = (newIngredient) => {
-        this.props.addIngredient({name: newIngredient}).then((ingredient) => {
-            this.setState({...this.state.recipe.ingredients.push({value: ingredient.uid, label: newIngredient})})
+        this.props.addIngredient({name: newIngredient}).then((uid) => {
+            this.setState({...this.state.recipe.ingredients.push({value: uid, label: newIngredient})})
         });
     }
     handleIngredientTyping = (newValue) => this.setState({ ingredientInputValue: newValue })
@@ -110,20 +110,22 @@ class CreateRecipe extends Component {
                                     <label>Description</label>
                                     <textarea className="form-control" name="description" onChange={this.handleChange}></textarea>
                                 </div>
-                                <div className="form-group form__group">
-                                    <label>Ingredients</label>
-                                    <Select 
-                                        components={animatedComponents} 
-                                        name="ingredients" 
-                                        isMulti 
-                                        options={this.state.loadedIngredients}
-                                        cacheOptions 
-                                        onInputChange={this.handleIngredientTyping}
-                                        onChange={this.handleChangeIngredients}/>
-                                    {ingredients && ingredients.map((data, i)=> {
-                                        return <IngredientWeight key={data.value} data={data} onWeightChange={this.handleWeightChange}>{i+1}</IngredientWeight>
-                                    })}
-                                </div>
+                                {this.state.loadedIngredients.length > 0 && 
+                                    <div className="form-group form__group">
+                                        <label>Ingredients</label>
+                                        <Select 
+                                            components={animatedComponents} 
+                                            name="ingredients" 
+                                            isMulti 
+                                            options={this.state.loadedIngredients}
+                                            cacheOptions 
+                                            onInputChange={this.handleIngredientTyping}
+                                            onChange={this.handleChangeIngredients}/>
+                                        {ingredients && ingredients.map((data, i)=> {
+                                            return <IngredientWeight key={data.value} data={data} onWeightChange={this.handleWeightChange}>{i+1}</IngredientWeight>
+                                        })}
+                                    </div>
+                                }
                                 <div className="form-group form__group">
                                     <label>Instruction</label>
                                     <textarea className="form-control" name="instruction" onChange={this.handleChange}></textarea>
@@ -139,18 +141,19 @@ class CreateRecipe extends Component {
     }
     componentDidMount = () => {
         this.props.fetchIngredients().then((fetchedIngredients) => {
-            this.setState({loadedIngredients: Object.keys(fetchedIngredients).map((uid)=>(
-                {
-                value: uid,
-                label: fetchedIngredients[uid].name
-                }
-            ))})
+            fetchedIngredients &&
+                this.setState({loadedIngredients: Object.keys(fetchedIngredients).map((uid)=>(
+                    {
+                        value: uid,
+                        label: fetchedIngredients[uid].name
+                    }
+                ))})
         })
     }
 }
 
 const mapStateToProps = (state) => ({
-    recipes: state.recipes
+    state
 })
 
 const mapDispatchToProps = {
@@ -160,6 +163,6 @@ const mapDispatchToProps = {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(CreateRecipe)
