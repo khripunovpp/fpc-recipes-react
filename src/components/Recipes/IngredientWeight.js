@@ -8,7 +8,7 @@ export default function({data, onWeightChange, children: index}) {
                     <label className="col-form-label" htmlFor={data.value}><b>{index}</b>. {data.label}</label>
                 </div>
                 <div className="col-md-9">
-                    <input type="text" id={data.value} name={data.value} onChange={onWeightChange} className="form-control" placeholder={`Set ${data.label} weight`} aria-label={`Set ${data.value} weight`}></input>
+                    <input type="text" id={data.value} name={data.value} onChange={onWeightChange} className="form-control" placeholder={`Set "${data.label}" weight`} aria-label={`Set ${data.value} weight`}></input>
                 </div>
             </div>
         </div>

@@ -9,22 +9,13 @@ import addRecipe from '../../store/actions/recipe/addRecipe';
 import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
 import addIngredient from "../../store/actions/ingredients/addIngredient";
 
-
 const animatedComponents = makeAnimated();
 
-const options = [
-    {value: 'fbfradfnzgfmzgn', label: 'Banana'},
-    {value: 'erb6hi6umnv7n5y', label: 'Yogurt'},
-    {value: 'ewfnd4y3hn45u4h', label: 'Cucumber'},
-    {value: 'mfgn76jwn45hn7t', label: 'Milk'},
-    {value: 'gtjetyns463grvy', label: 'Flour'},
-];
-
 class CreateRecipe extends Component {
-    initialState = {
-        recipe: {
+    state = {
+        formData: {
             title: '',
-            instruction: '',
+            instruction: {},
             description: '',
             ingredients: []
         },
@@ -33,24 +24,27 @@ class CreateRecipe extends Component {
         hasNotify: false,
         uid: ''
     }
-    state = this.initialState;
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.addRecipe(this.state.recipe).then(this.showNotify);
+        this.props.addRecipe(this.state.formData).then(this.showNotify);
     }
     handleChange = (e) => {
         e.preventDefault();
         this.setState({
             ...this.state,
-            recipe: {
-                ...this.state.recipe,
+            formData: {
+                ...this.state.formData,
                 [e.target.name]: e.target.value
             }
         })
     }
+    handleInstructionChange = (e) => {
+        e.preventDefault();
+        const instructionStep = e.target.dataset.instructionStep;
+    }
     handleWeightChange = (e) => {
         e.preventDefault();
-        this.state.recipe.ingredients.map((ingredient)=>{
+        this.state.formData.ingredients.map((ingredient)=>{
             return (ingredient.value === e.target.name) && (ingredient.weight = e.target.value)
         })
     }
@@ -59,7 +53,7 @@ class CreateRecipe extends Component {
 
         switch(action) {
             case 'select-option':
-                this.setState({...this.state.recipe.ingredients.push({...e.option})})
+                this.setState({...this.state.formData.ingredients.push({...e.option})})
                 break;
             case 'remove-value':
                 const {value: removedValue} = e.removedValue;
@@ -67,7 +61,7 @@ class CreateRecipe extends Component {
                     let tState = {
                         ...state
                     };
-                    tState.recipe[name] = tState.recipe[name].filter((ingredient)=>{
+                    tState.formData[name] = tState.formData[name].filter((ingredient)=>{
                         return ingredient.value !== removedValue;
                     })
                     return tState;
@@ -79,7 +73,7 @@ class CreateRecipe extends Component {
     }
     handleCreateOption = (newIngredient) => {
         this.props.addIngredient({name: newIngredient}).then((uid) => {
-            this.setState({...this.state.recipe.ingredients.push({value: uid, label: newIngredient})})
+            this.setState({...this.state.formData.ingredients.push({value: uid, label: newIngredient})})
         });
     }
     handleIngredientTyping = (newValue) => this.setState({ ingredientInputValue: newValue })
@@ -90,7 +84,7 @@ class CreateRecipe extends Component {
         })
     }
     render() {
-        const ingredients = this.state.recipe.ingredients;
+        const ingredients = this.state.formData.ingredients;
         console.log(this.state);
         return (
             <div className="main">
@@ -104,11 +98,20 @@ class CreateRecipe extends Component {
                             <div className="form">
                                 <div className="form-group form__group">
                                     <label>Title</label>
-                                    <input type="text" name="title" onChange={this.handleChange} className="form-control" value={this.state.recipe.title}/>
+                                    <input 
+                                        type="text" 
+                                        name="title" 
+                                        onChange={this.handleChange} 
+                                        className="form-control" 
+                                        value={this.state.formData.title}/>
                                 </div>
                                 <div className="form-group form__group">
                                     <label>Description</label>
-                                    <textarea className="form-control" name="description" onChange={this.handleChange}></textarea>
+                                    <textarea 
+                                        className="form-control" 
+                                        name="description" 
+                                        value={this.state.formData.description} 
+                                        onChange={this.handleChange}></textarea>
                                 </div>
                                 {this.state.loadedIngredients.length > 0 && 
                                     <div className="form-group form__group">
@@ -120,18 +123,37 @@ class CreateRecipe extends Component {
                                             options={this.state.loadedIngredients}
                                             cacheOptions 
                                             onInputChange={this.handleIngredientTyping}
-                                            onChange={this.handleChangeIngredients}/>
+                                            onChange={this.handleChangeIngredients}
+                                            ref={this.selectRef}/>
                                         {ingredients && ingredients.map((data, i)=> {
-                                            return <IngredientWeight key={data.value} data={data} onWeightChange={this.handleWeightChange}>{i+1}</IngredientWeight>
+                                            return <IngredientWeight 
+                                                key={data.value} 
+                                                data={data} 
+                                                onWeightChange={this.handleWeightChange}>{i+1}</IngredientWeight>
                                         })}
                                     </div>
                                 }
                                 <div className="form-group form__group">
                                     <label>Instruction</label>
-                                    <textarea className="form-control" name="instruction" onChange={this.handleChange}></textarea>
+                                    <textarea 
+                                        className="form-control" 
+                                        name="instruction" 
+                                        data-instruction-step="1"
+                                        onChange={this.handleInstructionChange}>
+                                    </textarea>
+                                    <button 
+                                        className="btn btn-lg btn-block btn-sm btn-outline-secondary mt-1"
+                                        onClick={this.handleAddInstructon}>
+                                        + Add next step
+                                    </button>
                                 </div>
                                 {this.state.hasNotify && <Redirect to={`/recipes/${this.state.uid}`} /> }
-                                <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Add recipe</button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-primary" 
+                                    onClick={this.handleSubmit}>
+                                    Add recipe
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -151,10 +173,6 @@ class CreateRecipe extends Component {
         })
     }
 }
-
-const mapStateToProps = (state) => ({
-    state
-})
 
 const mapDispatchToProps = {
     addRecipe,
