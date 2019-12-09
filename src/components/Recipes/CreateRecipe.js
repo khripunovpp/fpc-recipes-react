@@ -8,22 +8,29 @@ import IngredientWeight from './IngredientWeight';
 import addRecipe from '../../store/actions/recipe/addRecipe';
 import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
 import addIngredient from "../../store/actions/ingredients/addIngredient";
+import Popup from '../../components/layout/Popup';
 
 const animatedComponents = makeAnimated();
 
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+]
+
 class CreateRecipe extends Component {
-    state = {
+    initialState = {
         formData: {
             title: '',
-            instruction: {},
+            instruction: '',
             description: '',
             ingredients: []
         },
-        ingredientInputValue: '',
-        loadedIngredients: [],
+        choisedIngredients: [],
         hasNotify: false,
         uid: ''
     }
+    state = this.initialState;
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.addRecipe(this.state.formData).then(this.showNotify);
@@ -38,10 +45,6 @@ class CreateRecipe extends Component {
             }
         })
     }
-    handleInstructionChange = (e) => {
-        e.preventDefault();
-        const instructionStep = e.target.dataset.instructionStep;
-    }
     handleWeightChange = (e) => {
         e.preventDefault();
         this.state.formData.ingredients.map((ingredient)=>{
@@ -49,34 +52,38 @@ class CreateRecipe extends Component {
         })
     }
     handleChangeIngredients = (o, e) => {
-        const {action, name} = e;
+        const {action} = e;
 
         switch(action) {
             case 'select-option':
-                this.setState({...this.state.formData.ingredients.push({...e.option})})
+                const {value, label} = e.option;
+                this.setState({choisedIngredients: [...this.state.choisedIngredients, {value, label}]})
+                break;
+            case 'clear':
+                this.setState({choisedIngredients: []})
                 break;
             case 'remove-value':
-                const {value: removedValue} = e.removedValue;
-                this.setState((state) => {
-                    let tState = {
-                        ...state
-                    };
-                    tState.formData[name] = tState.formData[name].filter((ingredient)=>{
-                        return ingredient.value !== removedValue;
-                    })
-                    return tState;
-                })
+                this.setState({choisedIngredients: this.state.choisedIngredients.filter((ingredient)=>{
+                    return ingredient.value !== e.removedValue.value;
+                })})
                 break;
             default:
                 return false;
         }
     }
-    handleCreateOption = (newIngredient) => {
-        this.props.addIngredient({name: newIngredient}).then((uid) => {
-            this.setState({...this.state.formData.ingredients.push({value: uid, label: newIngredient})})
-        });
+    handleSubmitPopup = () => {
+        console.log(this.state)
+        this.setState({
+            ...this.state,
+            formData: {
+                ...this.state.formData,
+                ingredients: [...this.state.choisedIngredients]
+            }
+        })
     }
-    handleIngredientTyping = (newValue) => this.setState({ ingredientInputValue: newValue })
+    handleCancelPopup = () => {
+    
+    }
     showNotify = (recipe) => {
         this.setState({
             uid: recipe.uid,
@@ -85,7 +92,6 @@ class CreateRecipe extends Component {
     }
     render() {
         const ingredients = this.state.formData.ingredients;
-        console.log(this.state);
         return (
             <div className="main">
                 <div className="container">
@@ -95,6 +101,21 @@ class CreateRecipe extends Component {
                     </Helmet>
                     <div className="row">
                         <div className="col-md-12">
+                            <Popup 
+                                id="exampleModal" 
+                                aria-labelledby="exampleModalLabel"
+                                title="Choise ingredients"
+                                onSubmit={this.handleSubmitPopup} 
+                                onCancel={this.handleCancelPopup}>  
+                                <Select 
+                                    components={animatedComponents} 
+                                    name="ingredients" 
+                                    isMulti 
+                                    cacheOptions
+                                    options={options}
+                                    value={this.state.choisedIngredients}
+                                    onChange={this.handleChangeIngredients}/>
+                            </Popup>
                             <div className="form">
                                 <div className="form-group form__group">
                                     <label>Title</label>
@@ -113,26 +134,13 @@ class CreateRecipe extends Component {
                                         value={this.state.formData.description} 
                                         onChange={this.handleChange}></textarea>
                                 </div>
-                                {this.state.loadedIngredients.length > 0 && 
-                                    <div className="form-group form__group">
-                                        <label>Ingredients</label>
-                                        <Select 
-                                            components={animatedComponents} 
-                                            name="ingredients" 
-                                            isMulti 
-                                            options={this.state.loadedIngredients}
-                                            cacheOptions 
-                                            onInputChange={this.handleIngredientTyping}
-                                            onChange={this.handleChangeIngredients}
-                                            ref={this.selectRef}/>
-                                        {ingredients && ingredients.map((data, i)=> {
-                                            return <IngredientWeight 
-                                                key={data.value} 
-                                                data={data} 
-                                                onWeightChange={this.handleWeightChange}>{i+1}</IngredientWeight>
-                                        })}
-                                    </div>
-                                }
+                                <div className="form-group form__group">
+                                    <label>Ingredients</label>
+                                    {ingredients && ingredients.map((ingredient, index)=> {
+                                        return <IngredientWeight key={index} ingredient={ingredient} onWeightChange={this.handleWeightChange}>{index+1}</IngredientWeight>
+                                    })}
+                                    <a href="#" className="form__link" data-toggle="modal" data-target="#exampleModal">+ Добавить ингредиент</a>
+                                </div>
                                 <div className="form-group form__group">
                                     <label>Instruction</label>
                                     <textarea 
@@ -160,17 +168,6 @@ class CreateRecipe extends Component {
                 </div>
             </div>
         )
-    }
-    componentDidMount = () => {
-        this.props.fetchIngredients().then((fetchedIngredients) => {
-            fetchedIngredients &&
-                this.setState({loadedIngredients: Object.keys(fetchedIngredients).map((uid)=>(
-                    {
-                        value: uid,
-                        label: fetchedIngredients[uid].name
-                    }
-                ))})
-        })
     }
 }
 
