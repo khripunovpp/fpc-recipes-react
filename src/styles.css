@@ -40,3 +40,7 @@
 .form__link {
     display: block;
 }
+
+.form-control + .form-control {
+    margin-top: 5px;
+}

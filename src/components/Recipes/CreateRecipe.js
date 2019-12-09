@@ -9,6 +9,7 @@ import addRecipe from '../../store/actions/recipe/addRecipe';
 import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
 import addIngredient from "../../store/actions/ingredients/addIngredient";
 import Popup from '../../components/layout/Popup';
+import { generatorUID } from '../../utility';
 
 const animatedComponents = makeAnimated();
 
@@ -22,7 +23,11 @@ class CreateRecipe extends Component {
     initialState = {
         formData: {
             title: '',
-            instruction: '',
+            instructions: {
+                [generatorUID(15)]: {
+                    text: ""
+                }
+            },
             description: '',
             ingredients: []
         },
@@ -83,6 +88,22 @@ class CreateRecipe extends Component {
     handleCancelPopup = () => {
         this.setState({choisedIngredients: [...this.state.formData.ingredients]})
     }
+    handleAddInstructon = () => {
+        this.setState({
+            ...this.state,
+            formData: {
+                ...this.state.formData,
+                instructions: {
+                    ...this.state.formData.instructions, 
+                    [generatorUID(15)]: {text: ""}
+                }
+            }
+        })
+    }
+    handleInstructionChange = (e) => {
+        const {id, value} = e.target;
+        
+    }
     showNotify = (recipe) => {
         this.setState({
             uid: recipe.uid,
@@ -136,18 +157,25 @@ class CreateRecipe extends Component {
                                 <div className="form-group form__group">
                                     <label>Ingredients</label>
                                     {ingredients && ingredients.map((ingredient, index)=> {
-                                        return <IngredientWeight key={index} ingredient={ingredient} onWeightChange={this.handleWeightChange}>{index+1}</IngredientWeight>
+                                        const number = index + 1 ;
+                                        return <IngredientWeight key={index} ingredient={ingredient} onWeightChange={this.handleWeightChange}>{number}</IngredientWeight>
                                     })}
                                     <a href="#" className="form__link" data-toggle="modal" data-target="#exampleModal">+ Добавить ингредиент</a>
                                 </div>
                                 <div className="form-group form__group">
-                                    <label>Instruction</label>
-                                    <textarea 
-                                        className="form-control" 
-                                        name="instruction" 
-                                        data-instruction-step="1"
-                                        onChange={this.handleInstructionChange}>
-                                    </textarea>
+                                    <label>Instructions</label>
+                                    {
+                                        Object.keys(this.state.formData.instructions).map(key => (
+                                            <textarea 
+                                                className="form-control" 
+                                                name="instruction" 
+                                                id={key}
+                                                key={key}
+                                                value={this.state.formData.instructions[key].text}
+                                                onChange={this.handleInstructionChange}>
+                                            </textarea> 
+                                        ))
+                                    }
                                     <button 
                                         className="btn btn-lg btn-block btn-sm btn-outline-secondary mt-1"
                                         onClick={this.handleAddInstructon}>
