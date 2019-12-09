@@ -72,7 +72,6 @@ class CreateRecipe extends Component {
         }
     }
     handleSubmitPopup = () => {
-        console.log(this.state)
         this.setState({
             ...this.state,
             formData: {
@@ -82,7 +81,7 @@ class CreateRecipe extends Component {
         })
     }
     handleCancelPopup = () => {
-    
+        this.setState({choisedIngredients: [...this.state.formData.ingredients]})
     }
     showNotify = (recipe) => {
         this.setState({
