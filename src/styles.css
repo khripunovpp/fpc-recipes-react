@@ -37,10 +37,18 @@
     transform: scale(1.1);
 }
 
-.form__link {
-    display: block;
-}
-
 .form-control + .form-control {
     margin-top: 5px;
+}
+.from__addMoreOption {
+    margin-top: 5px;
+}
+
+.error {
+    font-size: 13px;
+    margin-top: 3px;
+    margin-bottom: 0;
+}
+.error-danger {
+    color: #ff0000;
 }

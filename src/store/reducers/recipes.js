@@ -1,5 +1,5 @@
 const initialState = {
-  loading: true,
+  loading: false,
   recipes: []
 };
 
@@ -21,7 +21,9 @@ export default function recipes(state = initialState, action) {
         !hasInState && tmpState.recipes.push(action.recipe)
         return tmpState;
     case 'ADD_RECIPE_ERROR':
-        return {loading: false, error: [...action.error]};
+      return {loading: false, error: [...action.error]};
+    case 'ADD_RECIPE_LOADING':
+      return {...state, loading: true};
     default:
       return state
   }
