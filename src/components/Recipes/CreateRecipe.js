@@ -78,7 +78,7 @@ class CreateRecipe extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.validationForm();
-        this.state.errors && this.props.addRecipe(this.state.formData).then(this.showNotify);
+        this.state.validForm && this.props.addRecipe(this.state.formData).then(this.showNotify);
     }
     handleChange = (e) => {
         e.preventDefault();
