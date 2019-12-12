@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import fetchSingleIngredient from '../../store/actions/ingredients/fetchSingleIngredient';
-import Alert from "../layout/Alert";
-import Spinner from '../layout/Spinner';
+import Alert from "../Others/Alert";
+import Spinner from '../Others/Spinner';
 import { Helmet } from "react-helmet";
 
 function Page({ingredient}) {

@@ -1,5 +1,5 @@
 const initialState = {
-  loading: false,
+  loading: true,
   recipes: []
 };
 
@@ -23,7 +23,7 @@ export default function recipes(state = initialState, action) {
     case 'ADD_RECIPE_ERROR':
       return {loading: false, error: [...action.error]};
     case 'ADD_RECIPE_LOADING':
-      return {...state, loading: true};
+      return {...state};
     default:
       return state
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import RecipeCard from "./RecipeCard";
-import Alert from "../layout/Alert";
+import Alert from "../Others/Alert";
 
 export default function(props) {
     const { recipes } = props;

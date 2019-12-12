@@ -7,11 +7,12 @@ import makeAnimated from 'react-select/animated';
 import IngredientWeight from './IngredientWeight';
 import addRecipe from '../../store/actions/recipe/addRecipe';
 import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
-import Popup from '../../components/layout/Popup';
+import Popup from '../../components/Others/Popup';
 import { generatorUID } from '../../utility';
-import Spinner from '../layout/Spinner';
-import ErrorMessage from "../layout/ErrorMessage";
+import Spinner from '../Others/Spinner';
+import ErrorMessage from "../Others/ErrorMessage";
 import { isEmpty, errorsLabel } from '../../validations'
+import { recipeAddingStatusSelect } from '../../store/selects'
 
 const animatedComponents = makeAnimated();
 
@@ -38,8 +39,8 @@ class CreateRecipe extends Component {
         errors: {},
         addedId: ''
     }
-    validationForm = () => {
-        Object.keys(this.state.formData).map(el => {
+    validationForm = async () => {
+        await Object.keys(this.state.formData).map(el => {
             this.validationField(el, this.state.formData[el])
         });
     }
@@ -47,17 +48,17 @@ class CreateRecipe extends Component {
         switch(id) {
             case 'title':
             case 'description':
-                isEmpty(val) && this.setErrorToState(id, errorsLabel.required)
+                isEmpty(val) ? this.setErrorToState(id, errorsLabel.required) : this.setValidStatus()
                 break;
             case 'instructions':
                 Object.keys(this.state.formData.instructions).map(id => {
-                    isEmpty(this.state.formData.instructions[id].text) && this.setErrorToState(id, errorsLabel.required)
+                    isEmpty(this.state.formData.instructions[id].text) ? this.setErrorToState(id, errorsLabel.required) : this.setValidStatus()
                 })
                 break;
             case 'ingredients':
-                isEmpty(val) && this.setErrorToState(id, errorsLabel.oneRequired)
+                isEmpty(val) ? this.setErrorToState(id, errorsLabel.oneRequired) : this.setValidStatus()
                 this.state.formData.ingredients.map(ingredient => {
-                    isEmpty(ingredient.weight) && this.setErrorToState(ingredient.value, errorsLabel.empty)
+                    isEmpty(ingredient.weight) ? this.setErrorToState(ingredient.value, errorsLabel.empty) : this.setValidStatus()
                 })
                 break;
             default:
@@ -66,24 +67,30 @@ class CreateRecipe extends Component {
     }
     setErrorToState = (id, text) => {
         this.setState(state=>({
+            validForm: false,
             errors: {
                 ...state.errors,
                 [id]: text
             }
         }));
     }
+    setValidStatus = () => {
+        this.setState({
+            validForm: true 
+        })
+    }
     errorClass = (id) => {
         return this.state.errors[id] ? 'has-error' : '';
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        this.validationForm();
-        this.state.validForm && this.props.addRecipe(this.state.formData).then(this.showNotify);
+        this.validationForm().then(()=> {
+            this.state.validForm && this.props.addRecipe(this.state.formData).then(this.showNotify);
+        })
     }
     handleChange = (e) => {
         e.preventDefault();
         this.setState({
-            ...this.state,
             errors: {},
             formData: {
                 ...this.state.formData,
@@ -120,7 +127,6 @@ class CreateRecipe extends Component {
     }
     handleSubmitPopup = () => {
         this.setState({
-            ...this.state,
             errors: {},
             formData: {
                 ...this.state.formData,
@@ -133,7 +139,6 @@ class CreateRecipe extends Component {
     }
     handleAddInstructon = () => {
         this.setState({
-            ...this.state,
             formData: {
                 ...this.state.formData,
                 instructions: {
@@ -146,7 +151,6 @@ class CreateRecipe extends Component {
     handleInstructionChange = (e) => {
         const {id, value} = e.target;
         this.setState({
-            ...this.state, 
             errors: {},
             formData: {
                 ...this.state.formData,
@@ -164,7 +168,6 @@ class CreateRecipe extends Component {
     }
     render() {
         const ingredients = this.state.formData.ingredients;
-        console.log(this.state)
         return (
             <div className="main">
                 <div className="container">
@@ -217,10 +220,9 @@ class CreateRecipe extends Component {
                                         return <IngredientWeight 
                                             error={() => <ErrorMessage type="danger">{this.state.errors[ingredient.value]}</ErrorMessage>} 
                                             key={index} 
+                                            index = {number}
                                             ingredient={ingredient} 
-                                            onWeightChange={this.handleWeightChange}>
-                                                {number}
-                                            </IngredientWeight>
+                                            onWeightChange={this.handleWeightChange} />
                                     })}
                                     <button className="btn btn-block btn-sm btn-outline-secondary from__addMoreOption" data-toggle="modal" data-target="#exampleModal">+ Add more ingredients</button>
                                     {this.state.errors['ingredients'] && <ErrorMessage type="danger">{this.state.errors['ingredients']}</ErrorMessage>}
@@ -264,7 +266,7 @@ class CreateRecipe extends Component {
 }
 
 const mapStateToProps = state => ({
-    loading: state.recipes.loading
+    loading: recipeAddingStatusSelect(state)
 })
 
 const mapDispatchToProps = {

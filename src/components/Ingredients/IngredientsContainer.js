@@ -1,5 +1,5 @@
 import React from 'react';
-import Spinner from '../layout/Spinner';
+import Spinner from '../Others/Spinner';
 import IngredientsList from './IngredientsList';
 
 export default function(props) {

@@ -5,10 +5,10 @@ import { Helmet } from "react-helmet";
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 import fetchIngredients from '../../store/actions/ingredients/fetchIngredients';
 import RecipesContainer from '../Recipes/RecipesListContainer';
-import Sidebar from '../layout/Sidebar';
+import Sidebar from '../Others/Sidebar';
 
 class Dashboard extends Component {
-    componentDidMount = () => {
+    componentWillMount = () => {
         this.props.fetchRecipes();
         this.props.fetchIngredients();
     }
@@ -23,7 +23,7 @@ class Dashboard extends Component {
                     <h1 className="main__title">Recipes</h1>
                     <div className="row">
                         <div className="main__recipes recipes col-md-8">
-                            <RecipesContainer recipesData={recipesData}></RecipesContainer>
+                            <RecipesContainer />
                         </div>
                         <div className="col-md-4">
                             <Sidebar>

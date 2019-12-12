@@ -1,5 +1,5 @@
 import React from 'react';
-import Alert from "../layout/Alert";
+import Alert from "../Others/Alert";
 import IngredientsTable from "./IngredientsTable";
 
 export default function(props) {

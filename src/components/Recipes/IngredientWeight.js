@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function({error, ingredient, onWeightChange, children: index}) {
+export default function({error, ingredient, onWeightChange, index}) {
     return(
         <div className="container ingredientsList">
             <div className="row ingredientsList__item">
