@@ -1,6 +1,7 @@
 import React from 'react';
+import ErrorMessage from "../Others/ErrorMessage";
 
-export default function({error, ingredient, onWeightChange, index}) {
+export default function({errorMsg, ingredient, onWeightChange, index}) {
     return(
         <div className="container ingredientsList">
             <div className="row ingredientsList__item">
@@ -9,7 +10,7 @@ export default function({error, ingredient, onWeightChange, index}) {
                 </div>
                 <div className="col-md-9">
                     <input type="text" id={ingredient.value} name={ingredient.value} onChange={onWeightChange} className="form-control" placeholder={`Set "${ingredient.label}" weight`} aria-label={`Set ${ingredient.value} weight`}></input>
-                    {error()}
+                    {errorMsg && <ErrorMessage type="danger">{errorMsg}</ErrorMessage>}
                 </div>
             </div>
         </div>

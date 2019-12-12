@@ -5,9 +5,6 @@ import Spinner from '../Others/Spinner';
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 
 class RecipesListContainer extends Component {
-    state = {
-        loading: true
-    }
     render = () => {
         return (
             this.props.data.loading 

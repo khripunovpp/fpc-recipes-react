@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import fetchRecipes from '../../store/actions/recipe/fetchRecipes';
 import RecipesContainer from './RecipesListContainer';
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet';
+import { getRecipesDataFromState } from '../../store/selects';
 
 class RecipesListPage extends Component {
     render = () => {
@@ -32,7 +33,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state) => ({
-    recipes: {...state.recipes}
+    recipes: getRecipesDataFromState(state)
 })
 
 export default connect(

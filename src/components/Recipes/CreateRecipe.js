@@ -12,7 +12,6 @@ import { generatorUID } from '../../utility';
 import Spinner from '../Others/Spinner';
 import ErrorMessage from "../Others/ErrorMessage";
 import { isEmpty, errorsLabel } from '../../validations'
-import { recipeAddingStatusSelect } from '../../store/selects'
 
 const animatedComponents = makeAnimated();
 
@@ -37,10 +36,11 @@ class CreateRecipe extends Component {
         choisedIngredients: [],
         validForm: false,
         errors: {},
-        addedId: ''
+        addedId: '',
+        loading: false
     }
     validationForm = async () => {
-        await Object.keys(this.state.formData).map(el => {
+        await Object.keys(this.state.formData).forEach(el => {
             this.validationField(el, this.state.formData[el])
         });
     }
@@ -51,13 +51,13 @@ class CreateRecipe extends Component {
                 isEmpty(val) ? this.setErrorToState(id, errorsLabel.required) : this.setValidStatus()
                 break;
             case 'instructions':
-                Object.keys(this.state.formData.instructions).map(id => {
+                Object.keys(this.state.formData.instructions).forEach(id => {
                     isEmpty(this.state.formData.instructions[id].text) ? this.setErrorToState(id, errorsLabel.required) : this.setValidStatus()
                 })
                 break;
             case 'ingredients':
                 isEmpty(val) ? this.setErrorToState(id, errorsLabel.oneRequired) : this.setValidStatus()
-                this.state.formData.ingredients.map(ingredient => {
+                this.state.formData.ingredients.forEach(ingredient => {
                     isEmpty(ingredient.weight) ? this.setErrorToState(ingredient.value, errorsLabel.empty) : this.setValidStatus()
                 })
                 break;
@@ -85,7 +85,12 @@ class CreateRecipe extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.validationForm().then(()=> {
-            this.state.validForm && this.props.addRecipe(this.state.formData).then(this.showNotify);
+            if (this.state.validForm) {
+                this.setState({
+                    loading: true 
+                })
+                this.props.addRecipe(this.state.formData).then(this.showNotify)
+            }
         })
     }
     handleChange = (e) => {
@@ -163,7 +168,8 @@ class CreateRecipe extends Component {
     }
     showNotify = (data) => {
         data.uid && this.setState({
-            addedId: data.uid
+            addedId: data.uid,
+            loading: false
         })
     }
     render() {
@@ -216,11 +222,11 @@ class CreateRecipe extends Component {
                                 <div className="form-group form__group">
                                     <label>Ingredients</label>
                                     {ingredients && ingredients.map((ingredient, index)=> {
-                                        const number = index + 1 ;
+                                        const number = index + 1;
                                         return <IngredientWeight 
-                                            error={() => <ErrorMessage type="danger">{this.state.errors[ingredient.value]}</ErrorMessage>} 
+                                            errorMsg={this.state.errors[ingredient.value]} 
                                             key={index} 
-                                            index = {number}
+                                            index={number}
                                             ingredient={ingredient} 
                                             onWeightChange={this.handleWeightChange} />
                                     })}
@@ -255,7 +261,7 @@ class CreateRecipe extends Component {
                                     onClick={this.handleSubmit}>
                                     Add recipe
                                 </button>
-                                {this.props.loading && <Spinner /> }
+                                {this.state.loading && <Spinner /> }
                             </div>
                         </div>
                     </div>
@@ -265,9 +271,6 @@ class CreateRecipe extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    loading: recipeAddingStatusSelect(state)
-})
 
 const mapDispatchToProps = {
     addRecipe,
@@ -275,6 +278,6 @@ const mapDispatchToProps = {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(CreateRecipe)

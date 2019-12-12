@@ -1,1 +1,1 @@
-export const recipeAddingStatusSelect = (state) => state.recipes.loading
+export const getRecipesDataFromState = (state) => state.recipes 

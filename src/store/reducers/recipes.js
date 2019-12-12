@@ -22,6 +22,8 @@ export default function recipes(state = initialState, action) {
         return tmpState;
     case 'ADD_RECIPE_ERROR':
       return {loading: false, error: [...action.error]};
+    case 'ADD_RECIPE':
+      return {...state, loading: false};
     case 'ADD_RECIPE_LOADING':
       return {...state};
     default:
