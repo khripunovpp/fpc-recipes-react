@@ -43,22 +43,23 @@ class CreateRecipe extends Component {
         await Object.keys(this.state.formData).forEach(el => {
             this.validationField(el, this.state.formData[el])
         });
+        Object.keys(this.state.errors).length === 0 && this.setValidStatus();
     }
     validationField = (id, val) => {
         switch(id) {
             case 'title':
             case 'description':
-                isEmpty(val) ? this.setErrorToState(id, errorsLabel.required) : this.setValidStatus()
+                isEmpty(val) && this.setErrorToState(id, errorsLabel.required)
                 break;
             case 'instructions':
                 Object.keys(this.state.formData.instructions).forEach(id => {
-                    isEmpty(this.state.formData.instructions[id].text) ? this.setErrorToState(id, errorsLabel.required) : this.setValidStatus()
+                    isEmpty(this.state.formData.instructions[id].text) && this.setErrorToState(id, errorsLabel.required)
                 })
                 break;
             case 'ingredients':
-                isEmpty(val) ? this.setErrorToState(id, errorsLabel.oneRequired) : this.setValidStatus()
+                isEmpty(val) && this.setErrorToState(id, errorsLabel.oneRequired)
                 this.state.formData.ingredients.forEach(ingredient => {
-                    isEmpty(ingredient.weight) ? this.setErrorToState(ingredient.value, errorsLabel.empty) : this.setValidStatus()
+                    isEmpty(ingredient.weight) && this.setErrorToState(ingredient.value, errorsLabel.empty)
                 })
                 break;
             default:
@@ -270,7 +271,6 @@ class CreateRecipe extends Component {
         )
     }
 }
-
 
 const mapDispatchToProps = {
     addRecipe,

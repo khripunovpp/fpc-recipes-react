@@ -7,16 +7,17 @@ import { getRecipesDataFromState } from '../../store/selects';
 
 class RecipesListPage extends Component {
     render = () => {
+        const title = 'Recipes';
         return (
             <div className="main">
                 <div className="container">
-                    <h1 className="main__title">Recipes</h1>
+                    <h1 className="main__title">{title}</h1>
                     <Helmet>
-                        <title>Recipes</title>
+                        <title>{title}</title>
                     </Helmet>
                     <div className="row">
                         <div className="main__recipes recipes col-md-12">
-                            <RecipesContainer recipesData={this.props.recipes}></RecipesContainer>
+                            <RecipesContainer recipesData={this.props.recipes} />
                         </div>
                     </div>
                 </div>
